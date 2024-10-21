@@ -1,0 +1,26 @@
+{
+    "id": "rust-extra",
+    "version": "0.1.0",
+    "name": "Rust Extra Feature",
+    "documentationURL": "https://github.com/5t111111/devcontainer-features/tree/main/src/rust-extra",
+    "description": "This feature enhances the developer experience by adding some missing configurations to the Rust feature.",
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/rust"
+    ],
+    // On M1 Mac, chown fails on some Git objects. `|| true` is a workaround to avoid the error.
+    "onCreateCommand": "sudo bash -c 'chown -R $SUDO_USER:$SUDO_USER ${containerWorkspaceFolder} || true'",
+    "entrypoint": "sleep infinity",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "[rust]": {
+                    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+                }
+            },
+            "extensions": [
+                "fill-labs.dependi"
+            ]
+        }
+    }
+}

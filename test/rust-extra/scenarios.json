@@ -1,0 +1,12 @@
+{
+    "test": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/rust:1": {
+                "version": "latest",
+                "profile": "default"
+            },
+            "ghcr.io/5t111111/devcontainer-features/rust-extra:0": {}
+        }
+    }
+}
