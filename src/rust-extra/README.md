@@ -17,7 +17,6 @@ This feature enhances the developer experience by adding some missing configurat
 
 ### VS Code Extensions
 
-- `swellaby.vscode-rust-test-adapter`
 - `fill-labs.dependi`
 
 ## Feature Dependencies
