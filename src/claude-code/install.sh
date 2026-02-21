@@ -2,13 +2,13 @@
 
 set -e
 
-# Claude Code Native Installer
+# Claude Code Installer
 # This script installs the latest native version of Claude Code CLI
 # with enhanced security measures including checksum verification
 
 VERSION="${VERSION:-"latest"}"
 
-echo "Installing Claude Code Native (${VERSION})..."
+echo "Installing Claude Code (${VERSION})..."
 
 # Security: Use only official GCS bucket over HTTPS
 GCS_BUCKET="https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases"
@@ -33,7 +33,7 @@ fi
 download_file() {
     local url="$1"
     local output="$2"
-    
+
     # Security: Use --proto '=https' to enforce HTTPS only
     # Security: Use --tlsv1.2 to enforce minimum TLS version
     if [ -n "$output" ]; then
@@ -47,7 +47,7 @@ download_file() {
 case "$(uname -s)" in
     Darwin) os="darwin" ;;
     Linux) os="linux" ;;
-    *) 
+    *)
         echo "Error: Windows is not supported in this container environment" >&2
         exit 1
         ;;
@@ -102,12 +102,20 @@ if [ -z "$manifest_json" ]; then
     exit 1
 fi
 
-# Extract checksum from manifest (simple bash parsing for security)
+# Extract checksum from manifest using bash regex (same approach as official bootstrap.sh)
 # Security: Validate checksum format (SHA256 = 64 hex characters)
-checksum=$(echo "$manifest_json" | grep -o "\"$platform\"[^}]*\"checksum\"[[:space:]]*:[[:space:]]*\"[a-f0-9]\{64\}\"" | grep -o '"checksum"[^"]*"[a-f0-9]\{64\}"' | grep -o '[a-f0-9]\{64\}' | head -1)
+if [[ $manifest_json =~ \"$platform\"[^}]*\"checksum\"[[:space:]]*:[[:space:]]*\"([a-f0-9]{64})\" ]]; then
+    checksum="${BASH_REMATCH[1]}"
+else
+    echo "Error: Platform $platform not found in manifest or invalid checksum" >&2
+    echo "DEBUG: Looking for platform key: $platform" >&2
+    echo "DEBUG: Available platforms:" >&2
+    echo "$manifest_json" | grep -o '"darwin-[^"]*"\|"linux-[^"]*"' | tr -d '"' >&2
+    exit 1
+fi
 
 if [ -z "$checksum" ] || [ ${#checksum} -ne 64 ]; then
-    echo "Error: Platform $platform not found in manifest or invalid checksum" >&2
+    echo "Error: Invalid checksum format" >&2
     exit 1
 fi
 
@@ -142,11 +150,23 @@ echo "Checksum verified successfully!"
 # Make binary executable
 chmod +x "$binary_path"
 
-# Run claude install to set up launcher and shell integration
-echo "Setting up Claude Code..."
-"$binary_path" install ${VERSION}
+# Install to system-wide location for immediate availability
+# This ensures the binary is available in PATH without shell restart
+INSTALL_DIR="/usr/local/bin"
+mkdir -p "$INSTALL_DIR"
+
+echo "Installing Claude Code to ${INSTALL_DIR}..."
+cp "$binary_path" "$INSTALL_DIR/claude"
+chmod +x "$INSTALL_DIR/claude"
+
+# Run claude install to set up additional configuration (optional)
+# Note: This may create config files in user directory, but the binary is already in PATH
+if command -v claude >/dev/null 2>&1; then
+    echo "Setting up Claude Code configuration..."
+    claude install ${VERSION} 2>/dev/null || true
+fi
 
 echo ""
-echo "✅ Claude Code Native ${version_tag} installed successfully!"
+echo "✅ Claude Code ${version_tag} installed successfully!"
 echo ""
 echo "Run 'claude' to get started."

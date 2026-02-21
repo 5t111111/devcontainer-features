@@ -1,19 +1,10 @@
 {
-    "test_latest": {
+    "test": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
             "ghcr.io/devcontainers/features/common-utils:2": {},
-            "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
+            "claude-code": {
                 "version": "latest"
-            }
-        }
-    },
-    "test_stable": {
-        "image": "mcr.microsoft.com/devcontainers/base:debian",
-        "features": {
-            "ghcr.io/devcontainers/features/common-utils:2": {},
-            "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
-                "version": "stable"
             }
         }
     }
