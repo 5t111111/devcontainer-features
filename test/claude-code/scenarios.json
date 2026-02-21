@@ -1,6 +1,24 @@
 {
-    "test": {
+    "claude_code_latest": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:2": {},
+            "claude-code": {
+                "version": "latest"
+            }
+        }
+    },
+    "claude_code_stable": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:2": {},
+            "claude-code": {
+                "version": "stable"
+            }
+        }
+    },
+    "claude_code_with_debian": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
         "features": {
             "ghcr.io/devcontainers/features/common-utils:2": {},
             "claude-code": {

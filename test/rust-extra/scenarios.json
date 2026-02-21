@@ -1,5 +1,25 @@
 {
-    "test": {
+    "rust_extra_default": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/rust:1": {
+                "version": "latest",
+                "profile": "default"
+            },
+            "rust-extra": {}
+        }
+    },
+    "rust_extra_with_debian": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "ghcr.io/devcontainers/features/rust:1": {
+                "version": "latest",
+                "profile": "default"
+            },
+            "rust-extra": {}
+        }
+    },
+    "rust_extra_permissions": {
         "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
         "features": {
             "ghcr.io/devcontainers/features/rust:1": {
