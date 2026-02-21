@@ -48,6 +48,15 @@ Enhances the official Rust feature with additional tools and configurations:
 - Configures VS Code settings for Rust development
 - Handles file permissions correctly for container environments
 
+### claude-code
+
+Installs the latest native version of Claude Code CLI with enhanced security:
+- Native binary installation (not the deprecated npm version)
+- HTTPS-only downloads with TLS 1.2+ enforcement
+- SHA256 checksum verification against official manifest
+- Automatic platform detection (Linux/macOS, x64/arm64, glibc/musl)
+- Fail-safe installation with automatic cleanup on error
+
 ## Creating a New Feature
 
 ### 1. Create Feature Directory Structure

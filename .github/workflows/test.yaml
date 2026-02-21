@@ -34,6 +34,7 @@ jobs:
       matrix:
         features:
           - rust-extra
+          - claude-code
     steps:
       - uses: actions/checkout@v4
 

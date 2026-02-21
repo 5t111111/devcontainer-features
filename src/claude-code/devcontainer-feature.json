@@ -1,0 +1,21 @@
+{
+    "id": "claude-code",
+    "version": "0.1.0",
+    "name": "Claude Code",
+    "documentationURL": "https://github.com/5t111111/devcontainer-features/tree/main/src/claude-code",
+    "description": "Installs the latest native version of Claude Code CLI with enhanced security measures including checksum verification.",
+    "options": {
+        "version": {
+            "type": "string",
+            "enum": [
+                "latest",
+                "stable"
+            ],
+            "default": "latest",
+            "description": "Version channel to install (latest or stable)"
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
