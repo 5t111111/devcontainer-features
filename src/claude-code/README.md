@@ -105,7 +105,7 @@ To disable authentication persistence for security-sensitive environments, set `
 
 **How it works:**
 - Uses Docker named volumes to store authentication data
-- Volume name: `${localWorkspaceFolderBasename}-${devcontainerId}-claude-config` (project-specific, human-readable)
+- Volume name: `claude-config-${devcontainerId}` (project-specific)
 - Authentication data is stored in `/var/lib/claude-config` and symlinked to `~/.claude`
 - Survives container rebuilds and updates
 

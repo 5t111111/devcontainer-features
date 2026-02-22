@@ -60,7 +60,7 @@ By default, authentication **is persisted** across container rebuilds using Dock
 
 **When enabled (default)**:
 - Authentication data is stored in a Docker named volume
-- Volume name: `${localWorkspaceFolderBasename}-${devcontainerId}-claude-config` (project-specific, human-readable)
+- Volume name: `claude-config-${devcontainerId}` (project-specific)
 - Data location: `/var/lib/claude-config` (symlinked to `~/.claude`)
 - Survives container rebuilds and updates
 

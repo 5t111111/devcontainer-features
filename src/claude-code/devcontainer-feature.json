@@ -23,7 +23,7 @@
     "mounts": [
         {
             "type": "volume",
-            "source": "${localWorkspaceFolderBasename}-${devcontainerId}-claude-config",
+            "source": "claude-config-${devcontainerId}",
             "target": "/var/lib/claude-config"
         }
     ],
