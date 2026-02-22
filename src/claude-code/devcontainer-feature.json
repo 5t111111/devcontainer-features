@@ -16,8 +16,8 @@
         },
         "persistAuth": {
             "type": "boolean",
-            "default": false,
-            "description": "Persist Claude Code authentication using named volume. Set to true to keep authentication across container rebuilds."
+            "default": true,
+            "description": "Persist Claude Code authentication using named volume. Set to false to disable persistence for security-sensitive environments."
         }
     },
     "mounts": [

@@ -49,7 +49,7 @@ This feature implements multiple security measures to protect against supply cha
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | version | string | latest | Version channel to install. Options: `latest`, `stable` |
-| persistAuth | boolean | false | Persist authentication across container rebuilds using named volume |
+| persistAuth | boolean | true | Persist authentication across container rebuilds using named volume. Set to `false` to disable for security-sensitive environments. |
 
 ## What Does This Feature Do?
 
@@ -89,15 +89,15 @@ You'll be prompted to log in on first use.
 
 ### Authentication Persistence
 
-By default, Claude Code authentication is **not persisted** across container rebuilds for security. Each time you rebuild the container, you'll need to log in again.
+By default, Claude Code authentication **is persisted** across container rebuilds using Docker Named Volumes. This provides a seamless experience when frequently rebuilding containers.
 
-To enable authentication persistence, set `persistAuth: true`:
+To disable authentication persistence for security-sensitive environments, set `persistAuth: false`:
 
 ```json
 {
     "features": {
         "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
-            "persistAuth": true
+            "persistAuth": false
         }
     }
 }
@@ -105,14 +105,16 @@ To enable authentication persistence, set `persistAuth: true`:
 
 **How it works:**
 - Uses Docker named volumes to store authentication data
-- Volume is automatically named per-project using `${devcontainerId}`
+- Volume name: `claude-config-${devcontainerId}` (project-specific)
 - Authentication data is stored in `/var/lib/claude-config` and symlinked to `~/.claude`
 - Survives container rebuilds and updates
 
-**Security considerations:**
-- Enable only if you need it (e.g., frequently rebuilding containers)
-- Authentication data persists in Docker volumes on your machine
-- Disable if working with shared/untrusted environments
+**When to disable:**
+- Working in security-sensitive or shared environments
+- Company policies prohibit persistent authentication
+- Compliance requirements mandate re-authentication
+
+**Note:** The named volume is always created regardless of the `persistAuth` setting due to Dev Container Features specification limitations. When disabled, the volume simply remains empty and unused.
 
 ## OS Support
 

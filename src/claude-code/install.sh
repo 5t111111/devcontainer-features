@@ -223,9 +223,10 @@ if [ "$PERSIST_AUTH" = "true" ]; then
     echo "   Accessible via: $CLAUDE_CONFIG_DIR"
 else
     echo ""
-    echo "ℹ️  Authentication persistence is disabled (default)."
-    echo "   To enable persistence across container rebuilds, set:"
-    echo "   \"persistAuth\": true"
+    echo "ℹ️  Authentication persistence is disabled."
+    echo "   You will need to log in again after container rebuilds."
+    echo "   To enable persistence (default behavior), remove:"
+    echo "   \"persistAuth\": false"
 fi
 
 echo ""
