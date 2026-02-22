@@ -45,5 +45,44 @@
                 "persistAuth": true
             }
         }
+    },
+    "claude_code_with_node_user": {
+        "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20",
+        "features": {
+            "claude-code": {
+                "version": "latest",
+                "persistAuth": true
+            }
+        }
+    },
+    "claude_code_with_alpine": {
+        "image": "mcr.microsoft.com/devcontainers/base:alpine",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:2": {},
+            "claude-code": {
+                "version": "latest",
+                "persistAuth": true
+            }
+        }
+    },
+    "claude_code_migration_test": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:2": {},
+            "claude-code": {
+                "version": "latest",
+                "persistAuth": true
+            }
+        }
+    },
+    "claude_code_root_user": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "remoteUser": "root",
+        "features": {
+            "claude-code": {
+                "version": "latest",
+                "persistAuth": true
+            }
+        }
     }
 }
