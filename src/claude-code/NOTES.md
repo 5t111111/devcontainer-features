@@ -2,25 +2,13 @@
 
 The [official Anthropic devcontainer-features](https://github.com/anthropics/devcontainer-features) repository only installs the older npm-based version of Claude Code. This feature installs the modern native binary version which is faster, more efficient, and officially recommended.
 
-When using Dev Containers, Claude Code authentication is stored in the container's non-persistent filesystem. This means you need to log in again after each container rebuild. This feature uses Docker Named Volumes to persist authentication state, allowing you to maintain your login session even after container rebuilds.
+Additionally, when using Dev Containers, Claude Code authentication is stored in the container's non-persistent filesystem. This means you need to log in again after each container rebuild. This feature uses Docker Named Volumes to persist authentication state, allowing you to maintain your login session even after container rebuilds.
 
 > [!NOTE]
 > Why not use bind mounting of host's `~/.claude`?
 > - Directly accessing the host filesystem undermines the sandboxing benefits of Dev Containers and introduces security risks
 > - Sharing mounted filesystems between host and container with concurrent access can cause file locking issues or corruption
 > - The bind mount approach makes it difficult to use different accounts with Claude Code across projects
-
-## Example Usage
-
-Add this feature to your `devcontainer.json`:
-
-```json
-{
-  "features": {
-    "ghcr.io/5t111111/devcontainer-features/claude-code:0": {}
-  }
-}
-```
 
 ## 1. Native Claude Code CLI Installation
 

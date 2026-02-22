@@ -11,18 +11,6 @@ This repository contains the following Dev Container Features:
 
 For detailed information about each feature, please see the README in each feature's directory under `src/`.
 
-## Usage
-
-Features are automatically published to GitHub Container Registry. Reference them in your `devcontainer.json`:
-
-```json
-{
-    "features": {
-        "ghcr.io/5t111111/devcontainer-features/<feature-id>:0": {}
-    }
-}
-```
-
 ## Development
 
 See [AGENTS.md](AGENTS.md) for comprehensive guidance on developing features in this repository.
