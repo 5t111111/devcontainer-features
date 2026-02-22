@@ -1,159 +1,126 @@
+
 # Claude Code (claude-code)
 
-Installs the latest **native version** of the Claude Code CLI with enhanced security measures including checksum verification.
+Installs the latest native version of Claude Code CLI with enhanced security measures including checksum verification.
 
-## Why This Feature?
-
-The [official Anthropic devcontainer-features](https://github.com/anthropics/devcontainer-features) repository only installs the older npm-based version of Claude Code. This feature installs the modern native binary version which is:
-
-- ✅ Faster and more efficient
-- ✅ Officially recommended installation method
-- ✅ Automatically updated in the background
-- ✅ Supports the latest features
-
-## Security Features
-
-This feature implements multiple security measures to protect against supply chain attacks:
-
-- 🔒 **HTTPS-only downloads** with TLS 1.2+ enforcement
-- 🔒 **Official source verification** - downloads only from Google Cloud Storage bucket
-- 🔒 **SHA256 checksum verification** - validates binary integrity against manifest
-- 🔒 **Automatic cleanup** - removes temporary files on success or failure
-- 🔒 **Fail-safe installation** - aborts on any security validation failure
-
-## Usage
+## Example Usage
 
 ```json
-{
-    "features": {
-        "ghcr.io/5t111111/devcontainer-features/claude-code:0": {}
-    }
-}
-```
-
-### With Options
-
-```json
-{
-    "features": {
-        "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
-            "version": "stable",
-            "persistAuth": true
-        }
-    }
+"features": {
+    "ghcr.io/5t111111/devcontainer-features/claude-code:0": {}
 }
 ```
 
 ## Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| version | string | latest | Version channel to install. Options: `latest`, `stable` |
-| persistAuth | boolean | true | Persist authentication across container rebuilds using named volume. Set to `false` to disable for security-sensitive environments. |
+| Options Id | Description | Type | Default Value |
+|-----|-----|-----|-----|
+| version | Version channel to install (latest or stable) | string | latest |
+| persistAuth | Persist Claude Code authentication using named volume. Set to false to disable persistence for security-sensitive environments. | boolean | true |
 
-## What Does This Feature Do?
+## Why This Feature?
 
-### Native Binary Installation
+The [official Anthropic devcontainer-features](https://github.com/anthropics/devcontainer-features) repository only installs the older npm-based version of Claude Code. This feature installs the modern native binary version which is faster, more efficient, and officially recommended.
 
-This feature installs the native Claude Code binary by:
+When using Dev Containers, Claude Code authentication is stored in the container's non-persistent filesystem. This means you need to log in again after each container rebuild. This feature uses Docker Named Volumes to persist authentication state, allowing you to maintain your login session even after container rebuilds.
 
-1. Detecting your platform (Linux/macOS, x64/arm64, glibc/musl)
-2. Downloading the latest or stable version from the official Google Cloud Storage bucket
-3. Verifying the download against SHA256 checksums from the official manifest
-4. Installing the binary and setting up shell integration
+> [!NOTE]
+> Why not use bind mounting of host's `~/.claude`?
+> - Directly accessing the host filesystem undermines the sandboxing benefits of Dev Containers and introduces security risks
+> - Sharing mounted filesystems between host and container with concurrent access can cause file locking issues or corruption
+> - The bind mount approach makes it difficult to use different accounts with Claude Code across projects
 
-### Security Validation
+## Example Usage
 
-Every installation:
-
-- Downloads only over HTTPS with TLS 1.2+
-- Verifies the binary checksum matches the official manifest
-- Fails immediately if any security check fails
-- Cleans up downloaded files automatically
-
-## Requirements
-
-- `curl` - Required for downloading (checked automatically)
-- `sha256sum` or `shasum` - For checksum verification (usually pre-installed)
-
-## Getting Started
-
-After the feature is installed, start using Claude Code:
-
-```bash
-cd your-project
-claude
-```
-
-You'll be prompted to log in on first use.
-
-### Authentication Persistence
-
-By default, Claude Code authentication **is persisted** across container rebuilds using Docker Named Volumes. This provides a seamless experience when frequently rebuilding containers.
-
-To disable authentication persistence for security-sensitive environments, set `persistAuth: false`:
+Add this feature to your `devcontainer.json`:
 
 ```json
 {
-    "features": {
-        "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
-            "persistAuth": false
-        }
-    }
+  "features": {
+    "ghcr.io/5t111111/devcontainer-features/claude-code:0": {}
+  }
 }
 ```
 
-**How it works:**
-- Uses a Docker named volume to store authentication data
+## 1. Native Claude Code CLI Installation
+
+### What it installs
+
+- The native Claude Code CLI binary (not the deprecated npm version)
+- Automatically detects your platform (Linux/macOS, x64/arm64, glibc/musl)
+- Downloads the latest or stable version from the official Google Cloud Storage bucket
+- Sets up shell integration for seamless usage
+
+### Security measures
+
+- HTTPS-only downloads with TLS 1.2+ enforcement
+- SHA256 checksum verification against official manifest
+- Automatic cleanup of temporary files
+- Installation aborts immediately if any security check fails
+
+## 2. Authentication Persistence Across Container Rebuilds
+
+### The problem
+
+Without persistence, Claude Code authentication is stored in the container's ephemeral filesystem. This means you need to log in again after each container rebuild.
+
+### The solution
+
+This feature uses Docker Named Volumes to persist authentication state, allowing you to maintain your login session across container rebuilds and updates.
+
+### Configuration
+
+By default, authentication **is persisted**. To disable for security-sensitive environments:
+
+```json
+{
+  "features": {
+    "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
+      "persistAuth": false
+    }
+  }
+}
+```
+
+### How it works
+
+When persistence is **enabled (default)**:
+- Authentication data is stored in a Docker named volume
 - Volume name: `claude-config-${devcontainerId}` (project-specific)
 - Volume mount: `/var/lib/claude-config`
-- Creates symlinks for seamless access:
+- Symlinks created:
   - `~/.claude` → `/var/lib/claude-config`
   - `~/.claude.json` → `/var/lib/claude-config/config.json`
 - Survives container rebuilds and updates
 
-**When to disable:**
+When persistence is **disabled**:
+- Authentication data stored in container filesystem
+- Lost on container rebuild
+- You'll need to log in again after each rebuild
+
+### Important notes
+
+⚠️ **Named Volume is always created** even when `persistAuth: false`. The volume is mounted at `/var/lib/claude-config` regardless of the setting, but will not be used (remains empty) when persistence is disabled. This is a limitation of the Dev Container Features specification where `mounts` cannot be conditional.
+
+### When to disable persistence
+
 - Working in security-sensitive or shared environments
 - Company policies prohibit persistent authentication
 - Compliance requirements mandate re-authentication
 
-**Note:** The named volume is always created regardless of the `persistAuth` setting due to Dev Container Features specification limitations. When disabled, the volume simply remains empty and unused.
-
 ## OS Support
 
-This feature supports:
+- Debian/Ubuntu (glibc-based)
+- Alpine Linux (musl-based)
+- Automatically detects platform and installs the appropriate binary
 
-- ✅ Linux (x86_64, arm64) - both glibc and musl
-- ✅ macOS (Intel and Apple Silicon)
-- ❌ Windows (not supported in container environments)
+## Requirements
 
-The feature automatically detects your platform and installs the appropriate binary.
+- `curl` - For downloading (checked automatically)
+- `sha256sum` or `shasum` - For checksum verification (usually pre-installed)
+- `bash` - To execute the installation script
 
-## Comparison with Official Feature
-
-| Feature | Official npm version | This native version |
-|---------|---------------------|---------------------|
-| Installation method | npm/npx | Native binary |
-| Performance | Slower | Faster |
-| Updates | Manual | Automatic |
-| Status | Deprecated | Current |
-| Security checks | Basic | Enhanced (checksum verification) |
-
-## Documentation
-
-For more information about Claude Code:
-
-- [Official Documentation](https://code.claude.com/docs)
-- [Quickstart Guide](https://code.claude.com/docs/en/quickstart)
-- [Common Workflows](https://code.claude.com/docs/en/common-workflows)
-
-## Notes
-
-- This feature installs the native binary version of Claude Code, not the npm version
-- The binary automatically updates in the background to keep you on the latest version
-- A Claude subscription or Anthropic Console account is required to use Claude Code
-- First use will prompt you to log in
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/5t111111/devcontainer-features/blob/main/src/claude-code/devcontainer-feature.json). Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/5t111111/devcontainer-features/blob/main/src/claude-code/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
