@@ -78,15 +78,8 @@ When persistence is **disabled**:
 - Lost on container rebuild
 - You'll need to log in again after each rebuild
 
-### Important notes
-
-⚠️ **Named Volume is always created** even when `persistAuth: false`. The volume is mounted at `/var/lib/claude-config` regardless of the setting, but will not be used (remains empty) when persistence is disabled. This is a limitation of the Dev Container Features specification where `mounts` cannot be conditional.
-
-### When to disable persistence
-
-- Working in security-sensitive or shared environments
-- Company policies prohibit persistent authentication
-- Compliance requirements mandate re-authentication
+> [!IMPORTANT]
+> ⚠️ **Named Volume is always created** even when `persistAuth: false`. The volume is mounted at `/var/lib/claude-config` regardless of the setting, but will not be used (remains empty) when persistence is disabled. This is a limitation of the Dev Container Features specification where `mounts` cannot be conditional.
 
 ## OS Support
 
