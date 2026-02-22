@@ -17,14 +17,13 @@ check "running on musl libc" bash -c "ldd /bin/ls 2>&1 | grep -q musl"
 check "claude binary is musl" bash -c "ldd /usr/local/bin/claude 2>&1 | grep -q musl || file /usr/local/bin/claude | grep -q 'statically linked'"
 
 # Verify persistence works on Alpine
-check "persistent volume base directory exists" test -d "/var/lib/claude-config"
-check "persistent home directory exists" test -d "/var/lib/claude-config/home"
+check "persistent volume directory exists" test -d "/var/lib/claude-config"
 
 USER_HOME="/home/vscode"
 if [ -d "$USER_HOME" ]; then
     check ".claude exists" test -e "$USER_HOME/.claude"
     check ".claude is a symlink" test -L "$USER_HOME/.claude"
-    check ".claude points to persistent volume" bash -c "[ \"\$(readlink -f $USER_HOME/.claude)\" = \"/var/lib/claude-config/home\" ]"
+    check ".claude points to persistent volume" bash -c "[ \"\$(readlink -f $USER_HOME/.claude)\" = \"/var/lib/claude-config\" ]"
 
     # Check permissions on Alpine
     check "persistent volume permissions" bash -c "stat -c '%a' /var/lib/claude-config | grep '700'"
