@@ -6,38 +6,10 @@ Custom [Dev Container Features](https://containers.dev/implementors/features/) f
 
 This repository contains the following Dev Container Features:
 
-### [rust-extra](src/rust-extra)
+- **[rust-extra](src/rust-extra)** - Enhanced Rust development tools and configurations
+- **[claude-code](src/claude-code)** - Claude Code CLI installation with security features
 
-Enhances the official Rust feature with additional tools and configurations:
-- Installs cargo-binstall for faster binary installations
-- Adds commonly used Cargo tools: cargo-audit, cargo-edit, cargo-expand, cargo-watch
-- Configures VS Code settings for Rust development
-- Handles file permissions correctly for container environments
-
-```json
-{
-    "features": {
-        "ghcr.io/5t111111/devcontainer-features/rust-extra:0": {}
-    }
-}
-```
-
-### [claude-code](src/claude-code)
-
-Installs the latest **native version** of the Claude Code CLI with enhanced security measures:
-- Native binary installation (not the deprecated npm version)
-- HTTPS-only downloads with TLS 1.2+ enforcement
-- SHA256 checksum verification for supply chain attack protection
-- Automatic platform detection (Linux/macOS, x64/arm64, glibc/musl)
-- Fail-safe installation with automatic cleanup
-
-```json
-{
-    "features": {
-        "ghcr.io/5t111111/devcontainer-features/claude-code:0": {}
-    }
-}
-```
+For detailed information about each feature, please see the README in each feature's directory under `src/`.
 
 ## Usage
 
