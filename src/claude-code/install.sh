@@ -190,10 +190,14 @@ if [ "$PERSIST_AUTH" = "true" ]; then
 
     USER_HOME=$(eval echo ~$USERNAME)
     CLAUDE_CONFIG_DIR="$USER_HOME/.claude"
+    CLAUDE_JSON_FILE="$USER_HOME/.claude.json"
+    CLAUDE_XDG_CONFIG_DIR="$USER_HOME/.config/claude"
     PERSISTENT_DIR="/var/lib/claude-config"
+    PERSISTENT_XDG_DIR="/var/lib/claude-config-xdg"
 
-    # Ensure persistent directory exists with proper permissions
+    # Ensure persistent directories exist with proper permissions
     mkdir -p "$PERSISTENT_DIR"
+    mkdir -p "$PERSISTENT_XDG_DIR"
 
     # If .claude directory already exists and is not a symlink, migrate it
     if [ -d "$CLAUDE_CONFIG_DIR" ] && [ ! -L "$CLAUDE_CONFIG_DIR" ]; then
@@ -211,16 +215,64 @@ if [ "$PERSIST_AUTH" = "true" ]; then
         echo "Created symlink: $CLAUDE_CONFIG_DIR -> $PERSISTENT_DIR"
     fi
 
+    # Handle ~/.claude.json file
+    # This file needs to be persisted and symlinked according to the article
+    if [ -f "$CLAUDE_JSON_FILE" ] && [ ! -L "$CLAUDE_JSON_FILE" ]; then
+        echo "Migrating existing .claude.json to persistent volume..."
+        cp "$CLAUDE_JSON_FILE" "$PERSISTENT_DIR/config.json"
+        rm -f "$CLAUDE_JSON_FILE"
+    fi
+
+    # Create config.json in persistent directory if it doesn't exist
+    if [ ! -f "$PERSISTENT_DIR/config.json" ]; then
+        echo "Creating empty config.json in persistent volume..."
+        echo "{}" > "$PERSISTENT_DIR/config.json"
+    fi
+
+    # Create symlink from ~/.claude.json to ~/.claude/config.json
+    if [ ! -e "$CLAUDE_JSON_FILE" ]; then
+        ln -s "$PERSISTENT_DIR/config.json" "$CLAUDE_JSON_FILE"
+        echo "Created symlink: $CLAUDE_JSON_FILE -> $PERSISTENT_DIR/config.json"
+    fi
+
+    # Handle .config/claude directory (XDG config directory)
+    if [ -d "$CLAUDE_XDG_CONFIG_DIR" ] && [ ! -L "$CLAUDE_XDG_CONFIG_DIR" ]; then
+        echo "Migrating existing .config/claude directory to persistent volume..."
+        # Copy contents if any
+        if [ "$(ls -A $CLAUDE_XDG_CONFIG_DIR 2>/dev/null)" ]; then
+            cp -rp "$CLAUDE_XDG_CONFIG_DIR/"* "$PERSISTENT_XDG_DIR/" 2>/dev/null || true
+        fi
+        rm -rf "$CLAUDE_XDG_CONFIG_DIR"
+    fi
+
+    # Ensure parent directory exists
+    mkdir -p "$USER_HOME/.config"
+
+    # Create symlink if it doesn't exist
+    if [ ! -e "$CLAUDE_XDG_CONFIG_DIR" ]; then
+        ln -s "$PERSISTENT_XDG_DIR" "$CLAUDE_XDG_CONFIG_DIR"
+        echo "Created symlink: $CLAUDE_XDG_CONFIG_DIR -> $PERSISTENT_XDG_DIR"
+    fi
+
     # Set proper ownership and permissions
     chown -R "$USERNAME:$USERNAME" "$PERSISTENT_DIR" 2>/dev/null || chown -R "$USERNAME" "$PERSISTENT_DIR"
+    chown -R "$USERNAME:$USERNAME" "$PERSISTENT_XDG_DIR" 2>/dev/null || chown -R "$USERNAME" "$PERSISTENT_XDG_DIR"
     chmod -R 700 "$PERSISTENT_DIR"
+    chmod -R 700 "$PERSISTENT_XDG_DIR"
 
     # Ensure symlink ownership (use -h to not follow symlink)
     chown -h "$USERNAME:$USERNAME" "$CLAUDE_CONFIG_DIR" 2>/dev/null || chown -h "$USERNAME" "$CLAUDE_CONFIG_DIR"
+    chown -h "$USERNAME:$USERNAME" "$CLAUDE_JSON_FILE" 2>/dev/null || chown -h "$USERNAME" "$CLAUDE_JSON_FILE"
+    chown -h "$USERNAME:$USERNAME" "$CLAUDE_XDG_CONFIG_DIR" 2>/dev/null || chown -h "$USERNAME" "$CLAUDE_XDG_CONFIG_DIR"
 
     echo "✅ Authentication persistence enabled."
-    echo "   Auth data will be stored in: $PERSISTENT_DIR"
-    echo "   Accessible via: $CLAUDE_CONFIG_DIR"
+    echo "   Auth data will be stored in:"
+    echo "     - $PERSISTENT_DIR (for ~/.claude and ~/.claude.json)"
+    echo "     - $PERSISTENT_XDG_DIR (for ~/.config/claude)"
+    echo "   Accessible via:"
+    echo "     - $CLAUDE_CONFIG_DIR"
+    echo "     - $CLAUDE_JSON_FILE"
+    echo "     - $CLAUDE_XDG_CONFIG_DIR"
 else
     echo ""
     echo "ℹ️  Authentication persistence is disabled."

@@ -1,6 +1,6 @@
 {
     "id": "claude-code",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "name": "Claude Code",
     "documentationURL": "https://github.com/5t111111/devcontainer-features/tree/main/src/claude-code",
     "description": "Installs the latest native version of Claude Code CLI with enhanced security measures including checksum verification.",
@@ -25,6 +25,11 @@
             "type": "volume",
             "source": "claude-config-${devcontainerId}",
             "target": "/var/lib/claude-config"
+        },
+        {
+            "type": "volume",
+            "source": "claude-config-xdg-${devcontainerId}",
+            "target": "/var/lib/claude-config-xdg"
         }
     ],
     "installsAfter": [

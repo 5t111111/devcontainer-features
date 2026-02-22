@@ -84,5 +84,25 @@
                 "persistAuth": true
             }
         }
+    },
+    "claude_code_claude_json_test": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:2": {},
+            "claude-code": {
+                "version": "latest",
+                "persistAuth": true
+            }
+        }
+    },
+    "claude_code_xdg_config_test": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils:2": {},
+            "claude-code": {
+                "version": "latest",
+                "persistAuth": true
+            }
+        }
     }
 }
