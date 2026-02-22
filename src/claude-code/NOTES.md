@@ -42,6 +42,30 @@ For more information:
 - [Official Documentation](https://code.claude.com/docs)
 - [Quickstart Guide](https://code.claude.com/docs/en/quickstart)
 
+## Authentication Persistence
+
+By default, authentication is **not persisted** for security. To enable persistence across container rebuilds:
+
+```json
+{
+  "features": {
+    "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
+      "persistAuth": true
+    }
+  }
+}
+```
+
+When enabled:
+- Authentication data is stored in a Docker named volume
+- Volume is project-specific using `${devcontainerId}`
+- Data location: `/var/lib/claude-config` (symlinked to `~/.claude`)
+- Survives container rebuilds and updates
+
+When to use:
+- Enable: If you frequently rebuild containers
+- Disable: For security-sensitive environments or shared machines
+
 ## OS Support
 
 This feature should work on recent versions of Linux-based distributions including:

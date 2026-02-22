@@ -166,6 +166,68 @@ if command -v claude >/dev/null 2>&1; then
     claude install ${VERSION} 2>/dev/null || true
 fi
 
+# Setup authentication persistence if requested
+PERSIST_AUTH="${PERSISTAUTH:-false}"
+
+if [ "$PERSIST_AUTH" = "true" ]; then
+    echo ""
+    echo "Setting up authentication persistence..."
+    
+    # Determine the user
+    USERNAME="${USERNAME:-"${_REMOTE_USER:-"automatic"}"}"
+    if [ "$USERNAME" = "automatic" ]; then
+        # Try common non-root users
+        if id -u vscode >/dev/null 2>&1; then
+            USERNAME="vscode"
+        elif id -u node >/dev/null 2>&1; then
+            USERNAME="node"
+        elif id -u codespace >/dev/null 2>&1; then
+            USERNAME="codespace"
+        else
+            USERNAME="root"
+        fi
+    fi
+    
+    USER_HOME=$(eval echo ~$USERNAME)
+    CLAUDE_CONFIG_DIR="$USER_HOME/.claude"
+    PERSISTENT_DIR="/var/lib/claude-config"
+    
+    # Ensure persistent directory exists with proper permissions
+    mkdir -p "$PERSISTENT_DIR"
+    
+    # If .claude directory already exists and is not a symlink, migrate it
+    if [ -d "$CLAUDE_CONFIG_DIR" ] && [ ! -L "$CLAUDE_CONFIG_DIR" ]; then
+        echo "Migrating existing .claude directory to persistent volume..."
+        # Copy contents if any
+        if [ "$(ls -A $CLAUDE_CONFIG_DIR 2>/dev/null)" ]; then
+            cp -rp "$CLAUDE_CONFIG_DIR/"* "$PERSISTENT_DIR/" 2>/dev/null || true
+        fi
+        rm -rf "$CLAUDE_CONFIG_DIR"
+    fi
+    
+    # Create symlink if it doesn't exist
+    if [ ! -e "$CLAUDE_CONFIG_DIR" ]; then
+        ln -s "$PERSISTENT_DIR" "$CLAUDE_CONFIG_DIR"
+        echo "Created symlink: $CLAUDE_CONFIG_DIR -> $PERSISTENT_DIR"
+    fi
+    
+    # Set proper ownership and permissions
+    chown -R "$USERNAME:$USERNAME" "$PERSISTENT_DIR" 2>/dev/null || chown -R "$USERNAME" "$PERSISTENT_DIR"
+    chmod -R 700 "$PERSISTENT_DIR"
+    
+    # Ensure symlink ownership (use -h to not follow symlink)
+    chown -h "$USERNAME:$USERNAME" "$CLAUDE_CONFIG_DIR" 2>/dev/null || chown -h "$USERNAME" "$CLAUDE_CONFIG_DIR"
+    
+    echo "✅ Authentication persistence enabled."
+    echo "   Auth data will be stored in: $PERSISTENT_DIR"
+    echo "   Accessible via: $CLAUDE_CONFIG_DIR"
+else
+    echo ""
+    echo "ℹ️  Authentication persistence is disabled (default)."
+    echo "   To enable persistence across container rebuilds, set:"
+    echo "   \"persistAuth\": true"
+fi
+
 echo ""
 echo "✅ Claude Code ${version_tag} installed successfully!"
 echo ""

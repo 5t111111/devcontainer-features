@@ -37,7 +37,8 @@ This feature implements multiple security measures to protect against supply cha
 {
     "features": {
         "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
-            "version": "stable"
+            "version": "stable",
+            "persistAuth": true
         }
     }
 }
@@ -48,6 +49,7 @@ This feature implements multiple security measures to protect against supply cha
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | version | string | latest | Version channel to install. Options: `latest`, `stable` |
+| persistAuth | boolean | false | Persist authentication across container rebuilds using named volume |
 
 ## What Does This Feature Do?
 
@@ -84,6 +86,33 @@ claude
 ```
 
 You'll be prompted to log in on first use.
+
+### Authentication Persistence
+
+By default, Claude Code authentication is **not persisted** across container rebuilds for security. Each time you rebuild the container, you'll need to log in again.
+
+To enable authentication persistence, set `persistAuth: true`:
+
+```json
+{
+    "features": {
+        "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
+            "persistAuth": true
+        }
+    }
+}
+```
+
+**How it works:**
+- Uses Docker named volumes to store authentication data
+- Volume is automatically named per-project using `${devcontainerId}`
+- Authentication data is stored in `/var/lib/claude-config` and symlinked to `~/.claude`
+- Survives container rebuilds and updates
+
+**Security considerations:**
+- Enable only if you need it (e.g., frequently rebuilding containers)
+- Authentication data persists in Docker volumes on your machine
+- Disable if working with shared/untrusted environments
 
 ## OS Support
 
