@@ -192,8 +192,9 @@ if [ "$PERSIST_AUTH" = "true" ]; then
     CLAUDE_CONFIG_DIR="$USER_HOME/.claude"
     CLAUDE_JSON_FILE="$USER_HOME/.claude.json"
     CLAUDE_XDG_CONFIG_DIR="$USER_HOME/.config/claude"
-    PERSISTENT_DIR="/var/lib/claude-config"
-    PERSISTENT_XDG_DIR="/var/lib/claude-config-xdg"
+    PERSISTENT_BASE="/var/lib/claude-config"
+    PERSISTENT_DIR="$PERSISTENT_BASE/home"
+    PERSISTENT_XDG_DIR="$PERSISTENT_BASE/xdg"
 
     # Ensure persistent directories exist with proper permissions
     mkdir -p "$PERSISTENT_DIR"
@@ -255,10 +256,8 @@ if [ "$PERSIST_AUTH" = "true" ]; then
     fi
 
     # Set proper ownership and permissions
-    chown -R "$USERNAME:$USERNAME" "$PERSISTENT_DIR" 2>/dev/null || chown -R "$USERNAME" "$PERSISTENT_DIR"
-    chown -R "$USERNAME:$USERNAME" "$PERSISTENT_XDG_DIR" 2>/dev/null || chown -R "$USERNAME" "$PERSISTENT_XDG_DIR"
-    chmod -R 700 "$PERSISTENT_DIR"
-    chmod -R 700 "$PERSISTENT_XDG_DIR"
+    chown -R "$USERNAME:$USERNAME" "$PERSISTENT_BASE" 2>/dev/null || chown -R "$USERNAME" "$PERSISTENT_BASE"
+    chmod -R 700 "$PERSISTENT_BASE"
 
     # Ensure symlink ownership (use -h to not follow symlink)
     chown -h "$USERNAME:$USERNAME" "$CLAUDE_CONFIG_DIR" 2>/dev/null || chown -h "$USERNAME" "$CLAUDE_CONFIG_DIR"
@@ -268,7 +267,7 @@ if [ "$PERSIST_AUTH" = "true" ]; then
     echo "✅ Authentication persistence enabled."
     echo "   Auth data will be stored in:"
     echo "     - $PERSISTENT_DIR (for ~/.claude and ~/.claude.json)"
-    echo "     - $PERSISTENT_XDG_DIR (for ~/.config/claude)"
+    echo "     - $PERSISTENT_XDG_DIR (for $PERSISTENT_BASE ~/.config/claude)"
     echo "   Accessible via:"
     echo "     - $CLAUDE_CONFIG_DIR"
     echo "     - $CLAUDE_JSON_FILE"

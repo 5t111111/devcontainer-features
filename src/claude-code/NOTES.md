@@ -59,14 +59,15 @@ By default, authentication **is persisted** across container rebuilds using Dock
 ### How it works:
 
 **When enabled (default)**:
-- Authentication data is stored in Docker named volumes
-- Volume names: 
-  - `claude-config-${devcontainerId}` - for `~/.claude` directory and `~/.claude.json` file
-  - `claude-config-xdg-${devcontainerId}` - for `~/.config/claude` directory
-- Data locations:
-  - `/var/lib/claude-config` (symlinked to `~/.claude`)
-  - `/var/lib/claude-config/config.json` (symlinked to `~/.claude.json`)
-  - `/var/lib/claude-config-xdg` (symlinked to `~/.config/claude`)
+- Authentication data is stored in a single Docker named volume
+- Volume name: `claude-config-${devcontainerId}` (project-specific)
+- Volume structure:
+  - `/var/lib/claude-config/home/` - for `~/.claude` directory and `~/.claude.json` file
+  - `/var/lib/claude-config/xdg/` - for `~/.config/claude` directory
+- Symlinks created:
+  - `~/.claude` → `/var/lib/claude-config/home`
+  - `~/.claude.json` → `/var/lib/claude-config/home/config.json`
+  - `~/.config/claude` → `/var/lib/claude-config/xdg`
 - Survives container rebuilds and updates
 
 **When disabled**:
@@ -76,7 +77,7 @@ By default, authentication **is persisted** across container rebuilds using Dock
 
 ### Important Notes:
 
-⚠️ **Named Volumes are always created** even when `persistAuth: false`. The volumes are mounted at `/var/lib/claude-config` and `/var/lib/claude-config-xdg` regardless of the setting, but will not be used (remain empty) when persistence is disabled.
+⚠️ **Named Volume is always created** even when `persistAuth: false`. The volume is mounted at `/var/lib/claude-config` regardless of the setting, but will not be used (remains empty) when persistence is disabled.
 
 This is a limitation of the Dev Container Features specification where `mounts` cannot be conditional.
 

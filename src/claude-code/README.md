@@ -104,14 +104,15 @@ To disable authentication persistence for security-sensitive environments, set `
 ```
 
 **How it works:**
-- Uses Docker named volumes to store authentication data
-- Volume names: 
-  - `claude-config-${devcontainerId}` - for `~/.claude` and `~/.claude.json`
-  - `claude-config-xdg-${devcontainerId}` - for `~/.config/claude`
+- Uses a single Docker named volume to store all authentication data
+- Volume name: `claude-config-${devcontainerId}` (project-specific)
+- Volume structure:
+  - `/var/lib/claude-config/home/` - for `~/.claude` directory
+  - `/var/lib/claude-config/xdg/` - for `~/.config/claude` directory
 - Creates symlinks for seamless access:
-  - `~/.claude` → `/var/lib/claude-config`
-  - `~/.claude.json` → `/var/lib/claude-config/config.json`
-  - `~/.config/claude` → `/var/lib/claude-config-xdg`
+  - `~/.claude` → `/var/lib/claude-config/home`
+  - `~/.claude.json` → `/var/lib/claude-config/home/config.json`
+  - `~/.config/claude` → `/var/lib/claude-config/xdg`
 - Survives container rebuilds and updates
 
 **When to disable:**
@@ -119,7 +120,7 @@ To disable authentication persistence for security-sensitive environments, set `
 - Company policies prohibit persistent authentication
 - Compliance requirements mandate re-authentication
 
-**Note:** The named volumes are always created regardless of the `persistAuth` setting due to Dev Container Features specification limitations. When disabled, the volumes simply remain empty and unused.
+**Note:** The named volume is always created regardless of the `persistAuth` setting due to Dev Container Features specification limitations. When disabled, the volume simply remains empty and unused.
 
 ## OS Support
 
