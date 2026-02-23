@@ -12,10 +12,7 @@ echo "Installing Claude Code (${VERSION})..."
 
 # Security: Use only official GCS bucket over HTTPS
 GCS_BUCKET="https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases"
-DOWNLOAD_DIR="/tmp/claude-install-$$"
-
-# Create temporary download directory
-mkdir -p "$DOWNLOAD_DIR"
+DOWNLOAD_DIR=$(mktemp -d /tmp/claude-install-XXXXXXXX)
 
 # Cleanup function to remove temporary files
 cleanup() {
@@ -163,7 +160,7 @@ chmod +x "$INSTALL_DIR/claude"
 # Note: This may create config files in user directory, but the binary is already in PATH
 if command -v claude >/dev/null 2>&1; then
     echo "Setting up Claude Code configuration..."
-    claude install ${VERSION} 2>/dev/null || true
+    claude install "${VERSION}" 2>/dev/null || true
 fi
 
 # Setup user configuration persistence if requested
@@ -188,7 +185,15 @@ if [ "$PERSIST_USER_CONFIG" = "true" ]; then
         fi
     fi
 
-    USER_HOME=$(eval echo ~$USERNAME)
+    # Security: eval を使わず getent でホームディレクトリを取得してコマンドインジェクションを防ぐ
+    USER_HOME=$(getent passwd "$USERNAME" 2>/dev/null | cut -d: -f6)
+    if [ -z "$USER_HOME" ]; then
+        if [ "$USERNAME" = "root" ]; then
+            USER_HOME="/root"
+        else
+            USER_HOME="/home/$USERNAME"
+        fi
+    fi
     CLAUDE_CONFIG_DIR="$USER_HOME/.claude"
     CLAUDE_JSON_FILE="$USER_HOME/.claude.json"
     PERSISTENT_DIR="/var/lib/claude-config"
