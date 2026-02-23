@@ -32,7 +32,7 @@
             "ghcr.io/devcontainers/features/common-utils:2": {},
             "claude-code": {
                 "version": "latest",
-                "persistAuth": false
+                "persistUserConfig": false
             }
         }
     },
@@ -42,7 +42,7 @@
             "ghcr.io/devcontainers/features/common-utils:2": {},
             "claude-code": {
                 "version": "latest",
-                "persistAuth": true
+                "persistUserConfig": true
             }
         }
     },
@@ -51,7 +51,7 @@
         "features": {
             "claude-code": {
                 "version": "latest",
-                "persistAuth": true
+                "persistUserConfig": true
             }
         }
     },
@@ -61,7 +61,7 @@
             "ghcr.io/devcontainers/features/common-utils:2": {},
             "claude-code": {
                 "version": "latest",
-                "persistAuth": true
+                "persistUserConfig": true
             }
         }
     },
@@ -71,7 +71,7 @@
             "ghcr.io/devcontainers/features/common-utils:2": {},
             "claude-code": {
                 "version": "latest",
-                "persistAuth": true
+                "persistUserConfig": true
             }
         }
     },
@@ -81,7 +81,7 @@
         "features": {
             "claude-code": {
                 "version": "latest",
-                "persistAuth": true
+                "persistUserConfig": true
             }
         }
     },
@@ -91,7 +91,7 @@
             "ghcr.io/devcontainers/features/common-utils:2": {},
             "claude-code": {
                 "version": "latest",
-                "persistAuth": true
+                "persistUserConfig": true
             }
         }
     }

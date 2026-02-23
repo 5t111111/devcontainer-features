@@ -1,7 +1,7 @@
 
 # Claude Code (claude-code)
 
-Installs the native Claude Code CLI with checksum verification and persists authentication state across container rebuilds.
+Installs the native Claude Code CLI with checksum verification and persists user configuration including authentication state across container rebuilds.
 
 ## Example Usage
 
@@ -16,13 +16,13 @@ Installs the native Claude Code CLI with checksum verification and persists auth
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
 | version | Version channel to install (latest or stable) | string | latest |
-| persistAuth | Persist Claude Code authentication using named volume. Set to false to disable persistence for security-sensitive environments. | boolean | true |
+| persistUserConfig | Persist Claude Code user configuration (.claude directory) using named volume. Set to false to disable persistence for security-sensitive environments. | boolean | true |
 
 ## Why This Feature?
 
 The [official Anthropic devcontainer-features](https://github.com/anthropics/devcontainer-features) repository only installs the older npm-based version of Claude Code. This feature installs the modern native binary version which is faster, more efficient, and officially recommended.
 
-Additionally, when using Dev Containers, Claude Code authentication is stored in the container's non-persistent filesystem. This means you need to log in again after each container rebuild. This feature uses Docker Named Volumes to persist authentication state, allowing you to maintain your login session even after container rebuilds.
+**This feature's primary purpose is to persist authentication across container rebuilds.** When using Dev Containers, Claude Code authentication is stored in the container's non-persistent filesystem. This means you need to log in again after each container rebuild. This feature uses Docker Named Volumes to persist authentication state (stored in the `~/.claude` directory), allowing you to maintain your login session even after container rebuilds.
 
 > [!NOTE]
 > Why not use bind mounting of host's `~/.claude`?
@@ -50,21 +50,21 @@ Additionally, when using Dev Containers, Claude Code authentication is stored in
 
 ### The problem
 
-Without persistence, Claude Code authentication is stored in the container's ephemeral filesystem. This means you need to log in again after each container rebuild.
+Without persistence, Claude Code authentication and user configuration are stored in the container's ephemeral filesystem. This means you need to log in again after each container rebuild.
 
 ### The solution
 
-This feature uses Docker Named Volumes to persist authentication state, allowing you to maintain your login session across container rebuilds and updates.
+This feature uses Docker Named Volumes to persist user configuration including authentication state, allowing you to maintain your login session across container rebuilds and updates.
 
 ### Configuration
 
-By default, authentication **is persisted**. To disable for security-sensitive environments:
+By default, user configuration **is persisted**. To disable for security-sensitive environments:
 
 ```json
 {
   "features": {
     "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
-      "persistAuth": false
+      "persistUserConfig": false
     }
   }
 }
@@ -73,7 +73,7 @@ By default, authentication **is persisted**. To disable for security-sensitive e
 ### How it works
 
 When persistence is **enabled (default)**:
-- Authentication data is stored in a Docker named volume
+- User configuration (including authentication data) is stored in a Docker named volume
 - Volume name: `claude-config-${devcontainerId}` (project-specific)
 - Volume mount: `/var/lib/claude-config`
 - Symlinks created:
@@ -82,12 +82,12 @@ When persistence is **enabled (default)**:
 - Survives container rebuilds and updates
 
 When persistence is **disabled**:
-- Authentication data stored in container filesystem
+- User configuration stored in container filesystem
 - Lost on container rebuild
 - You'll need to log in again after each rebuild
 
 > [!IMPORTANT]
-> ⚠️ **Named Volume is always created** even when `persistAuth: false`. The volume is mounted at `/var/lib/claude-config` regardless of the setting, but will not be used (remains empty) when persistence is disabled. This is a limitation of the Dev Container Features specification where `mounts` cannot be conditional.
+> ⚠️ **Named Volume is always created** even when `persistUserConfig: false`. The volume is mounted at `/var/lib/claude-config` regardless of the setting, but will not be used (remains empty) when persistence is disabled. This is a limitation of the Dev Container Features specification where `mounts` cannot be conditional.
 
 ## OS Support
 

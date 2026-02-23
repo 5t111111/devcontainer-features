@@ -166,12 +166,12 @@ if command -v claude >/dev/null 2>&1; then
     claude install ${VERSION} 2>/dev/null || true
 fi
 
-# Setup authentication persistence if requested
-PERSIST_AUTH="${PERSISTAUTH:-false}"
+# Setup user configuration persistence if requested
+PERSIST_USER_CONFIG="${PERSISTUSERCONFIG:-false}"
 
-if [ "$PERSIST_AUTH" = "true" ]; then
+if [ "$PERSIST_USER_CONFIG" = "true" ]; then
     echo ""
-    echo "Setting up authentication persistence..."
+    echo "Setting up user configuration persistence..."
 
     # Determine the user
     USERNAME="${USERNAME:-"${_REMOTE_USER:-"automatic"}"}"
@@ -240,17 +240,17 @@ if [ "$PERSIST_AUTH" = "true" ]; then
     chown -h "$USERNAME:$USERNAME" "$CLAUDE_CONFIG_DIR" 2>/dev/null || chown -h "$USERNAME" "$CLAUDE_CONFIG_DIR"
     chown -h "$USERNAME:$USERNAME" "$CLAUDE_JSON_FILE" 2>/dev/null || chown -h "$USERNAME" "$CLAUDE_JSON_FILE"
 
-    echo "✅ Authentication persistence enabled."
-    echo "   Auth data will be stored in: $PERSISTENT_DIR"
+    echo "✅ User configuration persistence enabled."
+    echo "   Config data (including authentication) will be stored in: $PERSISTENT_DIR"
     echo "   Accessible via:"
     echo "     - $CLAUDE_CONFIG_DIR"
     echo "     - $CLAUDE_JSON_FILE"
 else
     echo ""
-    echo "ℹ️  Authentication persistence is disabled."
+    echo "ℹ️  User configuration persistence is disabled."
     echo "   You will need to log in again after container rebuilds."
     echo "   To enable persistence (default behavior), remove:"
-    echo "   \"persistAuth\": false"
+    echo "   \"persistUserConfig\": false"
 fi
 
 echo ""

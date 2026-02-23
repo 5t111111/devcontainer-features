@@ -1,9 +1,9 @@
 {
     "id": "claude-code",
-    "version": "0.2.4",
+    "version": "0.3.0",
     "name": "Claude Code",
     "documentationURL": "https://github.com/5t111111/devcontainer-features/tree/main/src/claude-code",
-    "description": "Installs the native Claude Code CLI with checksum verification and persists authentication state across container rebuilds.",
+    "description": "Installs the native Claude Code CLI with checksum verification and persists user configuration including authentication state across container rebuilds.",
     "options": {
         "version": {
             "type": "string",
@@ -14,10 +14,10 @@
             "default": "latest",
             "description": "Version channel to install (latest or stable)"
         },
-        "persistAuth": {
+        "persistUserConfig": {
             "type": "boolean",
             "default": true,
-            "description": "Persist Claude Code authentication using named volume. Set to false to disable persistence for security-sensitive environments."
+            "description": "Persist Claude Code user configuration (.claude directory) using named volume. Set to false to disable persistence for security-sensitive environments."
         }
     },
     "mounts": [
