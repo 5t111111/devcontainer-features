@@ -22,7 +22,7 @@ Installs the native Claude Code CLI with checksum verification and persists user
 
 The [official Anthropic devcontainer-features](https://github.com/anthropics/devcontainer-features) repository only installs the older npm-based version of Claude Code. This feature installs the modern native binary version which is faster, more efficient, and officially recommended.
 
-**This feature's primary purpose is to persist authentication across container rebuilds.** When using Dev Containers, Claude Code authentication is stored in the container's non-persistent filesystem. This means you need to log in again after each container rebuild. This feature uses Docker Named Volumes to persist authentication state (stored in the `~/.claude` directory), allowing you to maintain your login session even after container rebuilds.
+Additionally, when using Dev Containers, Claude Code authentication is stored in the container's non-persistent filesystem. This means you need to log in again after each container rebuild. This feature uses Docker Named Volumes to persist the user configuration including authentication state (stored in the `~/.claude` directory), allowing you to maintain your login session even after container rebuilds.
 
 > [!NOTE]
 > Why not use bind mounting of host's `~/.claude`?
@@ -30,7 +30,7 @@ The [official Anthropic devcontainer-features](https://github.com/anthropics/dev
 > - Sharing mounted filesystems between host and container with concurrent access can cause file locking issues or corruption
 > - The bind mount approach makes it difficult to use different accounts with Claude Code across projects
 
-## 1. Native Claude Code CLI Installation
+## Native Claude Code CLI Installation
 
 ### What it installs
 
@@ -46,7 +46,7 @@ The [official Anthropic devcontainer-features](https://github.com/anthropics/dev
 - Automatic cleanup of temporary files
 - Installation aborts immediately if any security check fails
 
-## 2. Authentication Persistence Across Container Rebuilds
+## Authentication Persistence Across Container Rebuilds
 
 ### The problem
 
