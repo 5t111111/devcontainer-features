@@ -7,7 +7,7 @@ Installs the native Claude Code CLI with checksum verification and persists user
 
 ```json
 "features": {
-    "ghcr.io/5t111111/devcontainer-features/claude-code:0": {}
+    "ghcr.io/5t111111/devcontainer-features/claude-code:1": {}
 }
 ```
 
@@ -63,7 +63,7 @@ By default, user configuration **is persisted**. To disable for security-sensiti
 ```json
 {
   "features": {
-    "ghcr.io/5t111111/devcontainer-features/claude-code:0": {
+    "ghcr.io/5t111111/devcontainer-features/claude-code:1": {
       "persistUserConfig": false
     }
   }
