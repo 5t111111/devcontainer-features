@@ -1,6 +1,6 @@
 {
     "id": "claude-code",
-    "version": "0.3.1",
+    "version": "1.0.0",
     "name": "Claude Code",
     "documentationURL": "https://github.com/5t111111/devcontainer-features/tree/main/src/claude-code",
     "description": "Installs the native Claude Code CLI with checksum verification and persists user configuration including authentication state across container rebuilds.",
