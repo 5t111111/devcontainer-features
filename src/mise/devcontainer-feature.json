@@ -14,11 +14,10 @@
       "type": "string",
       "enum": [
         "path",
-        "shims",
-        "none"
+        "shims"
       ],
       "default": "path",
-      "description": "Shell activation method. 'path' appends 'eval $(mise activate)' to system bash/zsh profiles. 'shims' appends 'eval $(mise activate --shims)' instead. 'none' skips automatic activation."
+      "description": "Shell activation method. 'path' appends 'eval $(mise activate)' to system bash/zsh profiles. 'shims' appends 'eval $(mise activate --shims)' instead."
     },
     "trust": {
       "type": "boolean",

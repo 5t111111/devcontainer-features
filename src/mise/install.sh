@@ -231,9 +231,9 @@ INSTALL_TOOLS="${INSTALL:-"true"}"
 
 # Security: validate activate option value
 case "$ACTIVATE" in
-    path|shims|none) ;;
+    path|shims) ;;
     *)
-        echo "Error: Invalid activate option: '${ACTIVATE}'. Must be 'path', 'shims', or 'none'." >&2
+        echo "Error: Invalid activate option: '${ACTIVATE}'. Must be 'path' or 'shims'." >&2
         exit 1
         ;;
 esac
@@ -267,17 +267,9 @@ activate_in_shell() {
     echo "  Added mise ${ACTIVATE} activation to ${rc_file}"
 }
 
-if [ "$ACTIVATE" != "none" ]; then
-    echo "Configuring mise shell activation (${ACTIVATE})..."
-    activate_in_shell bash /etc/bash.bashrc
-    activate_in_shell zsh /etc/zsh/zshrc
-else
-    echo ""
-    echo "To activate mise, add one of the following to your shell profile:"
-    echo "  bash: eval \"\$(mise activate bash)\""
-    echo "  zsh:  eval \"\$(mise activate zsh)\""
-    echo "  fish: mise activate fish | source"
-fi
+echo "Configuring mise shell activation (${ACTIVATE})..."
+activate_in_shell bash /etc/bash.bashrc
+activate_in_shell zsh /etc/zsh/zshrc
 
 # Create the postCreateCommand script (runs after container creation, in workspace context)
 MISE_FEATURE_DIR="/usr/local/share/mise-feature"
