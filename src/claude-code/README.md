@@ -104,4 +104,4 @@ When persistence is **disabled**:
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/5t111111/devcontainer-features/blob/main/src/claude-code/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](devcontainer-feature.json).  Add additional notes to a `NOTES.md`._

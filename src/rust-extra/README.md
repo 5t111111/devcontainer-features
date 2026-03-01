@@ -71,4 +71,4 @@ with the `apt` package manager installed.
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/5t111111/devcontainer-features/blob/main/src/rust-extra/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
