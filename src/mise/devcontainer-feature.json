@@ -1,6 +1,6 @@
 {
   "id": "mise",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "mise-en-place",
   "documentationURL": "https://github.com/5t111111/devcontainer-features/tree/main/src/mise",
   "description": "Installs the mise CLI (mise-en-place) with checksum verification. mise is a polyglot tool version manager and task runner.",
