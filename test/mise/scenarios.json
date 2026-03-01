@@ -1,0 +1,69 @@
+{
+  "mise_with_debian": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "mise": {}
+    }
+  },
+  "mise_with_ubuntu": {
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+      "mise": {}
+    }
+  },
+  "mise_specify_version": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "mise": {
+        "version": "v2026.2.19"
+      }
+    }
+  },
+  "mise_activate_path": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "mise": {
+        "activate": "path"
+      }
+    }
+  },
+  "mise_activate_shims": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "mise": {
+        "activate": "shims"
+      }
+    }
+  },
+  "mise_activate_none": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "mise": {
+        "activate": "none"
+      }
+    }
+  },
+  "mise_negative_cases": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "mise": {}
+    }
+  },
+  "mise_trust_false": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "mise": {
+        "trust": false,
+        "install": false
+      }
+    }
+  },
+  "mise_install_false": {
+    "image": "mcr.microsoft.com/devcontainers/base:debian",
+    "features": {
+      "mise": {
+        "install": false
+      }
+    }
+  }
+}
