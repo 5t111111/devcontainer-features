@@ -35,20 +35,6 @@
       }
     }
   },
-  "mise_activate_none": {
-    "image": "mcr.microsoft.com/devcontainers/base:debian",
-    "features": {
-      "mise": {
-        "activate": "none"
-      }
-    }
-  },
-  "mise_negative_cases": {
-    "image": "mcr.microsoft.com/devcontainers/base:debian",
-    "features": {
-      "mise": {}
-    }
-  },
   "mise_trust_false": {
     "image": "mcr.microsoft.com/devcontainers/base:debian",
     "features": {
