@@ -15,10 +15,10 @@ Installs the mise CLI (mise-en-place) with checksum verification. mise is a poly
 
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
-| version | Version of mise to install (e.g. "v2026.2.23"). Use "latest" to install the latest release. | string | latest |
-| activate | Shell activation method. 'path' appends 'eval $(mise activate)' to system bash/zsh profiles. 'shims' appends 'eval $(mise activate --shims)' instead. | string | path |
-| trust | Run 'mise trust --all --yes' on postCreate to automatically trust the workspace mise.toml. | boolean | true |
-| install | Run 'mise install --yes' on postCreate to install workspace tools. Automatically enables trust. | boolean | true |
+| version | Version of mise to install (e.g. `v2026.2.23`). Use `latest` to install the latest release. | string | latest |
+| activate | Shell activation method. `path` enables standard PATH-based activation in system bash/zsh profiles. `shims` enables shim-based activation in system bash/zsh profiles. | string | path |
+| trust | Run `mise trust --all --yes` on `postCreateCommand` to automatically trust the workspace `mise.toml`. | boolean | true |
+| install | Run `mise install --yes` on `postCreateCommand` to install workspace tools. Automatically enables trust. | boolean | true |
 
 ## Customizations
 

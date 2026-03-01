@@ -48,6 +48,16 @@ Enhances the official Rust feature with additional tools and configurations:
 - Configures VS Code settings for Rust development
 - Handles file permissions correctly for container environments
 
+### mise
+
+Installs the [mise](https://mise.jdx.dev/) CLI (mise-en-place), a polyglot tool version manager and task runner:
+- Direct binary download from GitHub Releases with GPG clearsign signature verification
+- SHA256 checksum verification against the GPG-verified `SHASUMS256.asc`
+- Version pinning support (e.g. `v2026.2.23`) or `latest`
+- Shell activation configuration for bash/zsh system profiles (`path`, `shims`, or `none`)
+- `postCreateCommand` integration: auto-runs `mise trust` and `mise install` on container creation
+- Input validation: version tag format, checksum format, `activate` option, and duplicate checksum detection
+
 ### claude-code
 
 Installs the latest native version of Claude Code CLI with enhanced security:
@@ -280,16 +290,39 @@ find /path -type f -exec chmod 775 {} \;
 
 ### Installing Binary Tools
 
-```bash
-# Download and install with verification
-curl -fsSL https://example.com/tool.sh | bash
+Avoid `curl ... | bash` patterns. Download binaries directly and verify with GPG + checksum, following the mise feature as a reference:
 
-# Or with explicit version
-curl -fsSL "https://example.com/tool-${VERSION}.tar.gz" -o tool.tar.gz
-tar -xzf tool.tar.gz
-mv tool /usr/local/bin/
-chmod +x /usr/local/bin/tool
-rm tool.tar.gz
+```bash
+DOWNLOAD_DIR=$(mktemp -d /tmp/tool-install-XXXXXXXX)
+GNUPGHOME=$(mktemp -d /tmp/tool-gnupg-XXXXXXXX)
+export GNUPGHOME
+chmod 700 "$GNUPGHOME"
+
+cleanup() { rm -rf "$DOWNLOAD_DIR" "$GNUPGHOME"; }
+trap cleanup EXIT
+
+# Enforce HTTPS and minimum TLS version
+download_file() {
+    curl -fsSL --proto '=https' --tlsv1.2 -o "$1" "$2"
+}
+
+# Import the tool's release signing key
+gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "<FINGERPRINT>"
+
+# Download checksum file and verify GPG signature
+download_file "$DOWNLOAD_DIR/checksums.asc" "https://example.com/v${VERSION}/checksums.asc"
+gpg --batch --verify "$DOWNLOAD_DIR/checksums.asc"
+
+# Extract and validate checksum
+expected=$(awk -v t="./tool-${VERSION}" '$2 == t { print $1 }' "$DOWNLOAD_DIR/checksums.asc")
+[[ "$expected" =~ ^[a-f0-9]{64}$ ]] || { echo "Invalid checksum format" >&2; exit 1; }
+
+# Download binary and verify
+download_file "$DOWNLOAD_DIR/tool" "https://example.com/v${VERSION}/tool"
+actual=$(sha256sum "$DOWNLOAD_DIR/tool" | awk '{print $1}')
+[ "$actual" = "$expected" ] || { echo "Checksum mismatch" >&2; exit 1; }
+
+install -m 0755 "$DOWNLOAD_DIR/tool" /usr/local/bin/tool
 ```
 
 ### Cleanup
@@ -357,8 +390,8 @@ Here are some ideas for new features to develop:
 ---
 
 **Note for AI Agents**: When creating or modifying features, always:
-1. Follow the existing patterns established in the rust-extra feature
-2. Test thoroughly with multiple scenarios
+1. Follow the security patterns established in the mise feature (GPG + checksum verification, HTTPS enforcement, input validation)
+2. Test thoroughly with multiple scenarios, including negative cases
 3. Document all options and behavior clearly
 4. Consider security implications (don't run as root unless necessary)
 5. Clean up after installation to keep images small

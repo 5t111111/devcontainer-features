@@ -8,7 +8,7 @@
     "version": {
       "type": "string",
       "default": "latest",
-      "description": "Version of mise to install (e.g. \"v2026.2.23\"). Use \"latest\" to install the latest release."
+      "description": "Version of mise to install (e.g. `v2026.2.23`). Use `latest` to install the latest release."
     },
     "activate": {
       "type": "string",
@@ -17,17 +17,17 @@
         "shims"
       ],
       "default": "path",
-      "description": "Shell activation method. 'path' appends 'eval $(mise activate)' to system bash/zsh profiles. 'shims' appends 'eval $(mise activate --shims)' instead."
+      "description": "Shell activation method. `path` enables standard PATH-based activation in system bash/zsh profiles. `shims` enables shim-based activation in system bash/zsh profiles."
     },
     "trust": {
       "type": "boolean",
       "default": true,
-      "description": "Run 'mise trust --all --yes' on postCreate to automatically trust the workspace mise.toml."
+      "description": "Run `mise trust --all --yes` on `postCreateCommand` to automatically trust the workspace `mise.toml`."
     },
     "install": {
       "type": "boolean",
       "default": true,
-      "description": "Run 'mise install --yes' on postCreate to install workspace tools. Automatically enables trust."
+      "description": "Run `mise install --yes` on `postCreateCommand` to install workspace tools. Automatically enables trust."
     }
   },
   "postCreateCommand": "/usr/local/share/mise-feature/post_create_command.sh",
