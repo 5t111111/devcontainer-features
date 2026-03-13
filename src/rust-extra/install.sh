@@ -15,6 +15,7 @@ echo "Installing Cargo binaries..."
 cargo binstall cargo-audit --locked -y
 cargo binstall cargo-edit --locked -y
 cargo binstall cargo-expand --locked -y
+cargo binstall cargo-outdated --locked -y
 cargo binstall cargo-watch --locked -y
 
 echo "Cleaning up build artifacts..."

@@ -10,12 +10,14 @@ check "cargo-binstall command exists" command -v cargo-binstall
 check "cargo-audit command exists" command -v cargo-audit
 check "cargo-edit (cargo-add) exists" command -v cargo-add
 check "cargo-expand command exists" command -v cargo-expand
+check "cargo-outdated command exists" command -v cargo-outdated
 check "cargo-watch command exists" command -v cargo-watch
 
 # Verify Cargo tools are functional
 check "cargo-audit can show version" bash -c "cargo audit --version | grep 'cargo-audit'"
 check "cargo-edit can show help" bash -c "cargo add --help | grep 'Add dependencies'"
 check "cargo-expand can show version" bash -c "cargo expand --version | grep 'cargo-expand'"
+check "cargo-outdated can show version" bash -c "cargo outdated --version | grep 'cargo-outdated'"
 check "cargo-watch can show version" bash -c "cargo watch --version | grep 'cargo-watch'"
 
 # Verify build artifacts were cleaned up

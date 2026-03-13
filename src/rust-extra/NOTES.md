@@ -25,6 +25,7 @@ This feature installs the following Rust binary tools:
 - cargo-audit
 - cargo-edit
 - cargo-expand
+- cargo-outdated
 - cargo-watch
 
 ### Fix permission issues

@@ -1,6 +1,6 @@
 {
     "id": "rust-extra",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "name": "Rust Extra Feature",
     "documentationURL": "https://github.com/5t111111/devcontainer-features/tree/main/src/rust-extra",
     "description": "This feature enhances the developer experience by adding some missing configurations to the Rust feature.",

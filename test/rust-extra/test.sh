@@ -10,6 +10,7 @@ check "cargo-binstall version" cargo-binstall --version
 check "cargo-audit version" cargo audit --version
 check "cargo-edit installed" cargo add --help
 check "cargo-expand version" cargo expand --version
+check "cargo-outdated version" cargo outdated --version
 check "cargo-watch version" cargo watch --version
 
 # Report result

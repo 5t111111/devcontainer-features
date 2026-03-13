@@ -13,6 +13,7 @@ check "cargo-binstall command exists" command -v cargo-binstall
 check "cargo-audit command exists" command -v cargo-audit
 check "cargo-edit (cargo-add) exists" command -v cargo-add
 check "cargo-expand command exists" command -v cargo-expand
+check "cargo-outdated command exists" command -v cargo-outdated
 check "cargo-watch command exists" command -v cargo-watch
 
 # Verify Rust is installed
