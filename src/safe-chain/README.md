@@ -1,5 +1,5 @@
 
-# Aikido safe-chain
+# Aikido Safe Chain (safe-chain)
 
 Installs safe-chain by Aikido Security — a lightweight supply-chain security proxy that intercepts npm, pip, yarn, and other package manager calls to block malicious packages in real time.
 
@@ -11,38 +11,41 @@ Installs safe-chain by Aikido Security — a lightweight supply-chain security p
 }
 ```
 
-## Options
 
-| Options Id | Description | Type | Default Value |
-|-----|-----|-----|-----|
-| ci | When true, runs `safe-chain setup-ci` on postCreateCommand, which creates shims under ~/.safe-chain/shims and prepends them to PATH. When false (default), runs `safe-chain setup`, which adds shell aliases to ~/.bashrc and ~/.zshrc. | boolean | false |
 
-## Notes
+## Why This Feature?
 
-### What it protects
+[Aikido Safe Chain](https://github.com/AikidoSec/safe-chain) is a lightweight proxy that intercepts package manager calls (npm, pip, yarn, pnpm, uv, poetry, and more) and blocks malicious packages in real time using Aikido's threat intelligence. It also enforces a minimum package age (default 48 hours) to guard against newly published malicious packages.
 
-safe-chain intercepts calls to the following package managers and routes them through a local security proxy:
+This feature installs safe-chain into a Dev Container and configures it so that the interception is active from the moment the container starts, with no manual setup required.
 
-- **JavaScript / Node.js**: npm, npx, yarn, pnpm, pnpx, bun, bunx, rush
-- **Python**: pip, pip3, uv, uvx, poetry, pipx, pdm
+## Security
 
-Packages are checked in real time against [Aikido Intel](https://intel.aikido.dev) threat intelligence. A minimum package age (default: 48 hours) is also enforced to guard against newly published malicious packages.
+Rather than piping the official install script directly to sh (`curl ... | sh`), this feature takes a more controlled approach:
 
-### Activation modes
+1. **Direct binary download**: The safe-chain binary is downloaded directly from the GitHub release over HTTPS (TLS 1.2+ enforced via `--proto '=https' --tlsv1.2`).
+2. **Checksum extraction**: The official release install script is also downloaded. The release pipeline bakes SHA256 checksums for each platform binary into that script. The feature extracts the relevant checksum from the script before trusting it.
+3. **SHA256 verification**: The downloaded binary is verified against the extracted checksum before installation. The install is aborted if verification fails.
+4. **Temporary file cleanup**: All downloaded files are removed via a `trap cleanup EXIT` handler regardless of success or failure.
 
-**`ci: false` (default)**
+> **Note**: safe-chain does not publish GPG-signed checksums (unlike mise, which provides a `SHASUMS256.asc` signed with the official release key). The SHA256 checksums embedded in the release install script are the strongest verification available from this project.
 
-Runs `safe-chain setup` via `postCreateCommand`. Adds aliases (e.g. `alias npm='safe-chain npm'`) to `~/.bashrc` and `~/.zshrc`. Aliases are only active in interactive shells.
+## Shell Integration
 
-**`ci: true`**
+`safe-chain setup` runs during the feature install (as root) to create the necessary system-level directories and files (`/usr/local/certs`, `/usr/local/scripts`). Shell integration is then written directly to the system-wide profiles `/etc/bash.bashrc` and `/etc/zsh/zshrc`, so all users in the container get the aliases without any `postCreateCommand`.
 
-Runs `safe-chain setup-ci` via `postCreateCommand` (as the container user). Creates executable shims for package managers under `~/.safe-chain/shims/` and prepends that directory to `PATH`. Works in interactive shells, scripts, and CI pipelines.
+> **Note**: This approach is a workaround for [AikidoSec/safe-chain#450](https://github.com/AikidoSec/safe-chain/issues/450), a regression introduced in v1.5.0 where non-root users cannot run `safe-chain setup` because the binary unconditionally tries to create directories under `/usr/local`.
 
-### Security measures
+## OS Support
 
-- HTTPS-only downloads with TLS 1.2+ enforcement
-- SHA256 checksum verification using checksums embedded in the official release install script
-- Automatic cleanup of all temporary files
+| OS    | x64 | arm64 |
+|-------|-----|-------|
+| Linux | ✅  | ✅    |
+
+Linux uses the `linuxstatic` builds (no glibc dependency), providing maximum compatibility across Debian, Ubuntu, Alpine, and other distributions.
+
+macOS builds are available in the asset list but devcontainer features typically target Linux containers; macOS support is present for completeness.
+
 
 ---
 

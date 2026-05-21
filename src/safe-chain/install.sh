@@ -2,7 +2,7 @@
 
 set -e
 
-# safe-chain Installer
+# Aikido Safe Chain Installer
 # Installs the safe-chain binary from Aikido Security with SHA256 checksum verification.
 # Rather than piping the official install script to sh, this feature:
 #   1. Downloads the official install script for the target release to extract its embedded checksums

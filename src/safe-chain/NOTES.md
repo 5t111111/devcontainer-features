@@ -1,6 +1,6 @@
 ## Why This Feature?
 
-[safe-chain](https://github.com/AikidoSec/safe-chain) by Aikido Security is a lightweight proxy that intercepts package manager calls (npm, pip, yarn, pnpm, uv, poetry, and more) and blocks malicious packages in real time using Aikido's threat intelligence. It also enforces a minimum package age (default 48 hours) to guard against newly published malicious packages.
+[Aikido Safe Chain](https://github.com/AikidoSec/safe-chain) is a lightweight proxy that intercepts package manager calls (npm, pip, yarn, pnpm, uv, poetry, and more) and blocks malicious packages in real time using Aikido's threat intelligence. It also enforces a minimum package age (default 48 hours) to guard against newly published malicious packages.
 
 This feature installs safe-chain into a Dev Container and configures it so that the interception is active from the moment the container starts, with no manual setup required.
 

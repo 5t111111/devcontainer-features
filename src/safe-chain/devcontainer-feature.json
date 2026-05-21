@@ -1,7 +1,7 @@
 {
     "id": "safe-chain",
     "version": "1.0.0",
-    "name": "Aikido safe-chain",
+    "name": "Aikido Safe Chain",
     "documentationURL": "https://github.com/5t111111/devcontainer-features/tree/main/src/safe-chain",
     "description": "Installs safe-chain by Aikido Security — a lightweight supply-chain security proxy that intercepts npm, pip, yarn, and other package manager calls to block malicious packages in real time.",
     "installsAfter": [
