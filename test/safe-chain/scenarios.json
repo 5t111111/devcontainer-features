@@ -1,0 +1,20 @@
+{
+    "safe_chain_with_debian": {
+        "image": "mcr.microsoft.com/devcontainers/base:debian",
+        "features": {
+            "safe-chain": {}
+        }
+    },
+    "safe_chain_verify_node": {
+        "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
+        "features": {
+            "safe-chain": {}
+        }
+    },
+    "safe_chain_verify_python": {
+        "image": "mcr.microsoft.com/devcontainers/python:3",
+        "features": {
+            "safe-chain": {}
+        }
+    }
+}
