@@ -35,6 +35,8 @@ jobs:
         features:
           - rust-extra
           - claude-code
+          - mise
+          - safe-chain
     steps:
       - uses: actions/checkout@v6
 
